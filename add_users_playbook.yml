@@ -1,0 +1,21 @@
+---
+- name: Add users and their SSH keys
+  hosts: default
+  become: true
+  vars_files:
+    - vars/users.yml
+  tasks:
+    - name: Debug users
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_items: "{{ users }}"
+    - name: Ensure users are present
+      ansible.builtin.user:
+        name: "{{ item.username }}"
+        state: present
+      with_items: "{{ users }}"
+    - name: Add SSH keys to authorized_keys
+      ansible.posix.authorized_key:
+        user: "{{ item.username }}"
+        key: "{{ item.ssh_key }}"
+      with_items: "{{ users }}"

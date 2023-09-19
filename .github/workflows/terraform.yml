@@ -7,7 +7,6 @@ on:
 env:
     TF_ACCESS_KEY_ID: ${{ secrets.TF_ACCESS_KEY_ID }}
     TF_SECRET_ACCESS_KEY: ${{ secrets.TF_SECRET_ACCESS_KEY }}
-    CONFIG_DIRECTORY: './'
 
 jobs:
     terraform:
