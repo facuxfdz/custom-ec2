@@ -1,0 +1,32 @@
+name: 'Terraform Plan'
+on:
+    pull_request:
+        branches:
+            - master
+
+env:
+    TF_ACCESS_KEY_ID: ${{ secrets.TF_ACCESS_KEY_ID }}
+    TF_SECRET_ACCESS_KEY: ${{ secrets.TF_SECRET_ACCESS_KEY }}
+    CONFIG_DIRECTORY: './'
+
+jobs:
+    terraform:
+        name: 'Terraform Plan'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ env.TF_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ env.TF_SECRET_ACCESS_KEY }}
+                aws-region: 'us-east-1'
+            - name: Terraform Setup
+              uses: hashicorp/terraform-github-actions@master
+              with:
+                terraform_version: 1.5.7
+            - run: terraform init            
