@@ -5,10 +5,6 @@
   vars_files:
     - vars/users.yml
   tasks:
-    - name: Debug users
-      ansible.builtin.debug:
-        msg: "{{ item }}"
-      with_items: "{{ users }}"
     - name: Ensure users are present
       ansible.builtin.user:
         name: "{{ item.username }}"

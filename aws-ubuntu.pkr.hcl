@@ -13,11 +13,11 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name                    = "packer-ubuntu-ami"
+  ami_name                    = "packer-ami--${formatdate("YYYY-MM-DD-hh-mm-ss", timestamp())}"
   instance_type               = "t2.micro"
   region                      = "us-east-1"
-  vpc_id                      = "vpc-0238e514672d8200c"
-  subnet_id                   = "subnet-0a8f2f006af14dbf0"
+  vpc_id                      = "${env("VPC_ID")}"
+  subnet_id                   = "${env("SUBNET_ID")}"
   ssh_timeout                 = "20m"
   associate_public_ip_address = true
   source_ami_filter {
@@ -37,7 +37,7 @@ build {
   sources = ["source.amazon-ebs.ubuntu"]
 
   provisioner "ansible" {
-    playbook_file   = "./add_users_playbook.yml"
+    playbook_file = "./add_users_playbook.yml"
   }
 
 }
