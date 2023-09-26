@@ -30,13 +30,13 @@ jobs:
                 terraform_version: 1.5.7
             - name : Terraform validation
               run: |
-                pushd terraform/vpc
+                cd terraform/vpc
                 terraform init
                 terraform plan 
             - name : Terraform creation
               run: |                
+                cd terraform/vpc
                 terraform apply -auto-approve
-                popd
             - name: Commit Terraform Changes
               run: |
                 git config --global user.name 'GitHub Actions'
