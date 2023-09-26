@@ -40,7 +40,7 @@ jobs:
             - name: Output VPC ID
               run: |
                 cd terraform/vpc
-                echo "::set-output name=vpc_id::$(terraform output vpc_id)"
+                echo "vpc_id=$(terraform output vpc_id)" >> $GITHUB_OUTPUT
         outputs:
             vpc_id: ${{ steps.terraform_vpc.outputs.vpc_id }}
     packer:
