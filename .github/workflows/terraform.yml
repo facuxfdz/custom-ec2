@@ -16,7 +16,7 @@ jobs:
             contents: read
             pull-requests: write
         outputs:
-            vpc_id: ${{ steps.terraform.outputs.vpc_id }}
+            vpc_id: ${{ steps.output_vpc_id.outputs.vpc_id }}
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -39,7 +39,8 @@ jobs:
               run: |                
                 cd terraform/vpc
                 terraform apply -auto-approve
-            - name: Output VPC ID
+            - id: output_vpc_id
+              name: Output VPC ID
               run: |
                 cd terraform/vpc
                 
