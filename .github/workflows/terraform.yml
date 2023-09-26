@@ -17,6 +17,7 @@ jobs:
             pull-requests: write
         outputs:
             vpc_id: ${{ steps.output_vpc_id.outputs.vpc_id }}
+            subnet_id: ${{ steps.output_vpc_id.outputs.subnet_id }}
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -44,12 +45,11 @@ jobs:
               run: |
                 cd terraform/vpc
                 
-                id=$(terraform output vpc_id | sed 's/"//g')
+                vpcid=$(terraform output vpc_id | sed 's/"//g')
+                subnetid=$(terraform output public_subnet_id | sed 's/"//g')
                 EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-                echo "vpc_id<<$EOF" >> $GITHUB_OUTPUT
-                echo "$id" >> $GITHUB_OUTPUT
-                echo "$EOF" >> $GITHUB_OUTPUT
-              
+                echo "vpc_id=$vpcid" >> "$GITHUB_OUTPUT"
+                echo "subnet_id=$subnetid" >> "$GITHUB_OUTPUT"
     packer:
       needs: [terraform_vpc]
       runs-on: ubuntu-latest
@@ -57,4 +57,34 @@ jobs:
           contents: read
           pull-requests: write
       steps:
-        - run: echo "The VPC ID is ${{ needs.terraform_vpc.outputs.vpc_id }}"
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ env.TF_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ env.TF_SECRET_ACCESS_KEY }}
+            aws-region: 'us-east-1'
+        - id: setup
+          name: Setup Packer
+          uses: hashicorp/setup-packer@main
+          with:
+            version: '1.9.4'
+        - name: Packer init
+          run: |
+            cd packer
+            packer init .
+        - name: Packer validate 
+          run: |
+            cd packer
+            packer validate ./aws-ubuntu.pkr.hcl
+        - name: Packer build
+          run: |
+            cd packer
+            VPC_ID=$(cat $GITHUB_OUTPUT | grep vpc_id | cut -d'=' -f2)
+            SUBNET_ID=$(cat $GITHUB_OUTPUT | grep subnet_id | cut -d'=' -f2)
+            echo $VPC_ID
+            echo $SUBNET_ID
+            echo "test"
+            packer build ./aws-ubuntu.pkr.hcl
+
