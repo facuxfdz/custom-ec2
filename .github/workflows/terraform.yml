@@ -10,7 +10,7 @@ env:
 
 jobs:
     terraform:
-        name: 'Terraform Validate'
+        name: 'VPC creation'
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -28,19 +28,16 @@ jobs:
               uses: hashicorp/setup-terraform@v2
               with:
                 terraform_version: 1.5.7
-            - name : Terraform Init VPC
+            - name : Terraform validation
               run: |
                 pushd terraform/vpc
                 terraform init
                 terraform plan 
+            - name : Terraform creation
+              run: |                
+                terraform apply -auto-approve
                 popd
-            - name : Terraform Init EC2
-              run: |
-                pushd terraform/ec2
-                terraform init
-                terraform plan 
-                popd
-            - name: Commit Terraform plan
+            - name: Commit Terraform Changes
               run: |
                 git config --global user.name 'GitHub Actions'
                 git config --global user.email 'facuassain@gmail.com'
