@@ -40,8 +40,9 @@ jobs:
             - name: Output VPC ID
               run: |
                 cd terraform/vpc
+                terraform output vpc_id
                 id=$(terraform output vpc_id)
-                echo "vpc_id=$id" >> $GITHUB_OUTPUT
+                echo "vpc_id=sdasd" >> $GITHUB_OUTPUT
 
     packer:
       needs: [terraform_vpc]
