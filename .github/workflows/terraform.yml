@@ -92,5 +92,5 @@ jobs:
             SUBNET_ID=${{ needs.terraform_vpc.outputs.subnet_id }}
             
             echo "test"
-            packer build ./aws-ubuntu.pkr.hcl -var "VPC_ID=$VPC_ID" -var "SUBNET_ID=$SUBNET_ID"
+            # packer build ./aws-ubuntu.pkr.hcl -var "VPC_ID=$VPC_ID" -var "SUBNET_ID=$SUBNET_ID"
 
