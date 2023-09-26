@@ -47,7 +47,7 @@ jobs:
                 
                 vpcid=$(terraform output vpc_id | sed 's/"//g')
                 subnetid=$(terraform output public_subnet_id | sed 's/"//g')
-                EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+                EOF="|"
                 echo "vpc_id<<$EOF" >> $GITHUB_OUTPUT
                 echo "$vpcid" >> $GITHUB_OUTPUT
                 echo "$EOF" >> $GITHUB_OUTPUT
