@@ -45,15 +45,18 @@ jobs:
               run: |
                 cd terraform/vpc
                 
-                vpcid=$(terraform output vpc_id | sed 's/"//g')
-                subnetid=$(terraform output public_subnet_id | sed 's/"//g')
-                EOF="|"
-                echo "vpc_id<<$EOF" >> $GITHUB_OUTPUT
-                echo "$vpcid" >> $GITHUB_OUTPUT
-                echo "$EOF" >> $GITHUB_OUTPUT
-                echo "subnet_id<<$EOF" >> $GITHUB_OUTPUT
-                echo "$subnetid" >> $GITHUB_OUTPUT
-                echo "$EOF" >> $GITHUB_OUTPUT
+                vpcid=$(terraform output vpc_id | sed 's/"//g' | sed 's/ //g')
+                subnetid=$(terraform output public_subnet_id | sed 's/"//g' | sed 's/ //g')
+                echo "vpc_id=$vpcid" >> $GITHUB_OUTPUT
+                echo "subnet_id=$subnetid" >> $GITHUB_OUTPUT
+                
+                # EOF="|"
+                # echo "vpc_id<<$EOF" >> $GITHUB_OUTPUT
+                # echo "$vpcid" >> $GITHUB_OUTPUT
+                # echo "$EOF" >> $GITHUB_OUTPUT
+                # echo "subnet_id<<$EOF" >> $GITHUB_OUTPUT
+                # echo "$subnetid" >> $GITHUB_OUTPUT
+                # echo "$EOF" >> $GITHUB_OUTPUT
 
     packer:
       needs: [terraform_vpc]
