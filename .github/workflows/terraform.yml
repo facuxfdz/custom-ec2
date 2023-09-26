@@ -44,7 +44,10 @@ jobs:
                 cd terraform/vpc
                 
                 id=$(terraform output vpc_id | sed 's/"//g')
-                echo "vpc_id=$id" >> $GITHUB_OUTPUT
+                EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+                echo "vpc_id<<$EOF" >> $GITHUB_OUTPUT
+                echo "$id" >> $GITHUB_OUTPUT
+                echo "$EOF" >> $GITHUB_OUTPUT
               
     packer:
       needs: [terraform_vpc]
