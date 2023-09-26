@@ -89,7 +89,7 @@ jobs:
             SUBNET_ID: ${{ needs.terraform_vpc.outputs.subnet_id }}
           run: |
             cd packer
-            echo $VPC_ID
+            echo "testito === $VPC_ID ==="
             echo $SUBNET_ID
             
             echo "test"
