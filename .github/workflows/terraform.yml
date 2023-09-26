@@ -48,8 +48,13 @@ jobs:
                 vpcid=$(terraform output vpc_id | sed 's/"//g')
                 subnetid=$(terraform output public_subnet_id | sed 's/"//g')
                 EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-                echo "vpc_id=$vpcid" >> "$GITHUB_OUTPUT"
-                echo "subnet_id=$subnetid" >> "$GITHUB_OUTPUT"
+                echo "vpc_id<<$EOF" >> $GITHUB_OUTPUT
+                echo "$vpcid" >> $GITHUB_OUTPUT
+                echo "$EOF" >> $GITHUB_OUTPUT
+                echo "subnet_id<<$EOF" >> $GITHUB_OUTPUT
+                echo "$subnetid" >> $GITHUB_OUTPUT
+                echo "$EOF" >> $GITHUB_OUTPUT
+
     packer:
       needs: [terraform_vpc]
       runs-on: ubuntu-latest
@@ -81,10 +86,11 @@ jobs:
         - name: Packer build
           run: |
             cd packer
-            VPC_ID=$(cat $GITHUB_OUTPUT | grep vpc_id | cut -d'=' -f2)
-            SUBNET_ID=$(cat $GITHUB_OUTPUT | grep subnet_id | cut -d'=' -f2)
+            VPC_ID=$(cat $GITHUB_OUTPUT | sed -n '/vpc_id<<EOF/,/EOF/p' | grep -v 'EOF' | sed '/^$/d')
+            SUBNET_ID=$(cat $GITHUB_OUTPUT | sed -n '/subnet_id<<EOF/,/EOF/p' | grep -v 'EOF' | sed '/^$/d')
             echo $VPC_ID
             echo $SUBNET_ID
+            echo "$GITHUB_OUTPUT"
             echo "test"
             packer build ./aws-ubuntu.pkr.hcl
 
