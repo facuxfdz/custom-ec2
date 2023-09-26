@@ -88,7 +88,7 @@ jobs:
             cd packer
             VPC_ID=$(cat $GITHUB_OUTPUT | sed -n '/vpc_id<<EOF/,/EOF/p' | grep -v 'EOF' | sed '/^$/d')
             SUBNET_ID=$(cat $GITHUB_OUTPUT | sed -n '/subnet_id<<EOF/,/EOF/p' | grep -v 'EOF' | sed '/^$/d')
-            echo $VPC_ID
+            echo ${{ needs.terraform_vpc.outputs.vpc_id }}
             echo $SUBNET_ID
             echo "$GITHUB_OUTPUT"
             echo "test"
