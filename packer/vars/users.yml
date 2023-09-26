@@ -1,0 +1,4 @@
+users:
+  - username: us1
+    ssh_key: [ssh-rsa AAAAB3NzaC1yc2E]
+    
