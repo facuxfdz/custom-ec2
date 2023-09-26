@@ -12,12 +12,22 @@ packer {
   }
 }
 
+variable "VPC_ID" {
+  type = string
+  default = env("VPC_ID")
+}
+
+variable "SUBNET_ID" {
+  type = string
+  default = env("SUBNET_ID")
+}
+
 source "amazon-ebs" "ubuntu" {
   ami_name                    = "packer-ami--${formatdate("YYYY-MM-DD-hh-mm-ss", timestamp())}"
   instance_type               = "t2.micro"
   region                      = "us-east-1"
-  vpc_id                      = "${env("VPC_ID")}"
-  subnet_id                   = "${env("SUBNET_ID")}"
+  vpc_id                      =  var.VPC_ID
+  subnet_id                   =   var.SUBNET_ID
   ssh_timeout                 = "20m"
   associate_public_ip_address = true
   source_ami_filter {

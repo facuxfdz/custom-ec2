@@ -92,5 +92,5 @@ jobs:
             echo $SUBNET_ID
             echo "$GITHUB_OUTPUT"
             echo "test"
-            packer build ./aws-ubuntu.pkr.hcl
+            packer build ./aws-ubuntu.pkr.hcl -var "VPC_ID=$VPC_ID" -var "SUBNET_ID=$SUBNET_ID"
 
