@@ -9,7 +9,7 @@ env:
     TF_SECRET_ACCESS_KEY: ${{ secrets.TF_SECRET_ACCESS_KEY }}
 
 jobs:
-    terraform:
+    terraform_vpc:
         name: 'VPC creation'
         runs-on: ubuntu-latest
         permissions:
@@ -37,3 +37,17 @@ jobs:
               run: |                
                 cd terraform/vpc
                 terraform apply -auto-approve
+            - name: Output VPC ID
+              run: |
+                cd terraform/vpc
+                echo "::set-output name=vpc_id::$(terraform output vpc_id)"
+        outputs:
+            vpc_id: ${{ steps.terraform_vpc.outputs.vpc_id }}
+    packer:
+      needs: [terraform_vpc]
+      runs-on: ubuntu-latest
+      permissions:
+          contents: read
+          pull-requests: write
+      steps:
+        - run: echo "The VPC ID is ${{ needs.terraform_vpc.outputs.vpc_id }}"
