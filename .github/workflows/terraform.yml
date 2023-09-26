@@ -10,7 +10,7 @@ env:
 
 jobs:
     terraform:
-        name: 'Terraform Plan'
+        name: 'Terraform Validate'
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -30,3 +30,9 @@ jobs:
                 terraform_version: 1.5.7
             - run: terraform init
             - run: terraform plan -out=tfplan
+            - name: Commit Terraform plan
+              run: |
+                git config --global user.name 'GitHub Actions'
+                git config --global user.email 'facuassain@gmail.com'
+                git commit -am "Valid Terraform plan"
+                git push
