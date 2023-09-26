@@ -22,7 +22,7 @@ resource "aws_route_table" "custom_rt" {
     }
 
     tags = {
-        Name = "facuxfdz-aws-rt-1"
+        Name = "facuxfdz-aws-route-table-1"
     }
 }
 
