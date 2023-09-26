@@ -28,8 +28,18 @@ jobs:
               uses: hashicorp/setup-terraform@v2
               with:
                 terraform_version: 1.5.7
-            - run: terraform init
-            - run: terraform plan -out=tfplan
+            - name : Terraform Init VPC
+              run: |
+                pushd terraform/vpc
+                terraform init
+                terraform plan 
+                popd
+            - name : Terraform Init EC2
+              run: |
+                pushd terraform/ec2
+                terraform init
+                terraform plan 
+                popd
             - name: Commit Terraform plan
               run: |
                 git config --global user.name 'GitHub Actions'
