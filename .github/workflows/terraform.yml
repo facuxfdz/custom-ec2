@@ -64,25 +64,25 @@ jobs:
       steps:
         - name: Checkout
           uses: actions/checkout@v3
-        - name: Configure AWS Credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ env.TF_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ env.TF_SECRET_ACCESS_KEY }}
-            aws-region: 'us-east-1'
-        - id: setup
-          name: Setup Packer
-          uses: hashicorp/setup-packer@main
-          with:
-            version: '1.9.4'
-        - name: Packer init
-          run: |
-            cd packer
-            packer init .
-        - name: Packer validate 
-          run: |
-            cd packer
-            packer validate ./aws-ubuntu.pkr.hcl
+        # - name: Configure AWS Credentials
+        #   uses: aws-actions/configure-aws-credentials@v1
+        #   with:
+        #     aws-access-key-id: ${{ env.TF_ACCESS_KEY_ID }}
+        #     aws-secret-access-key: ${{ env.TF_SECRET_ACCESS_KEY }}
+        #     aws-region: 'us-east-1'
+        # - id: setup
+        #   name: Setup Packer
+        #   uses: hashicorp/setup-packer@main
+        #   with:
+        #     version: '1.9.4'
+        # - name: Packer init
+        #   run: |
+        #     cd packer
+        #     packer init .
+        # - name: Packer validate 
+        #   run: |
+        #     cd packer
+        #     packer validate ./aws-ubuntu.pkr.hcl
         - name: Packer build
           run: |
             cd packer
