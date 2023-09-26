@@ -37,9 +37,3 @@ jobs:
               run: |                
                 cd terraform/vpc
                 terraform apply -auto-approve
-            - name: Commit Terraform Changes
-              run: |
-                git config --global user.name 'GitHub Actions'
-                git config --global user.email 'facuassain@gmail.com'
-                git commit -am "Valid Terraform plan"
-                git push
