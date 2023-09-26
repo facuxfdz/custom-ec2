@@ -84,12 +84,13 @@ jobs:
         #     cd packer
         #     packer validate ./aws-ubuntu.pkr.hcl
         - name: Packer build
+          env:
+            VPC_ID: ${{ needs.terraform_vpc.outputs.vpc_id }}
+            SUBNET_ID: ${{ needs.terraform_vpc.outputs.subnet_id }}
           run: |
             cd packer
-            echo ${{ needs.terraform_vpc.outputs.vpc_id }}
-            echo ${{ needs.terraform_vpc.outputs.subnet_id }}
-            VPC_ID=${{ needs.terraform_vpc.outputs.vpc_id }}
-            SUBNET_ID=${{ needs.terraform_vpc.outputs.subnet_id }}
+            echo $VPC_ID
+            echo $SUBNET_ID
             
             echo "test"
             # packer build ./aws-ubuntu.pkr.hcl -var "VPC_ID=$VPC_ID" -var "SUBNET_ID=$SUBNET_ID"
